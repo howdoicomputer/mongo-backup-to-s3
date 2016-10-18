@@ -4,7 +4,7 @@ var mds = require('mongo-dump-stream'),
     MemoryStream = require('memorystream');
 
 function isValidConfig(config) {
-    return (config.mongodb && config.s3 && config.mongodb.url && config.s3.key && config.s3.secret);
+    return (config.mongodb && config.s3 && config.mongodb.url);
 }
 
 function dumpToS3(config, callback) {
@@ -17,7 +17,7 @@ function dumpToS3(config, callback) {
     var stream = new MemoryStream();
     var urlTokens = config.mongodb.url.split('/');
     var dbName = urlTokens[urlTokens.length - 1];
-    var s3 = new AWS.S3({accessKeyId: config.s3.key, secretAccessKey: config.s3.secret});
+    var s3 = new AWS.S3();
     var tsFormat = config.s3.timestampFormat || 'YYYY-MM-DD_HH:mm:ss';
     var backupTS = moment().format(tsFormat);
     var filename = 'mongo_' + backupTS + '.dmp';
